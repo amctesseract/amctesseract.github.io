@@ -5,7 +5,7 @@
     }
     @media (prefers-color-scheme: dark) {
       path {
-        stroke: #dbeafe;
+        stroke: #2563eb;
       }
     }
   </style>
