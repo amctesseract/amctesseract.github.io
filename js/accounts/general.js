@@ -26,7 +26,7 @@ function showusername() {
         "</button></div>";
     } else {
       headdiv.innerHTML =
-        '<a href="../account/login-new.html" id="sign-in-button">Sign in</a><a href="../account/register-new.html" id="register-button">Register</a>';
+        '<a href="/accounts/login" id="sign-in-button">Sign in</a><a href="/accounts/register" id="register-button">Register</a>';
     }
   });
 }
