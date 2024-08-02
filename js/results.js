@@ -265,7 +265,7 @@ function showAIMEResults(results_div, data) {
   results_div.appendChild(table);
 
   loading_div.innerHTML =
-    '<p class="text-gray-500 dark:text-gray-400">Click on a table row to view more details.</p>';
+    '<p style="text-color: #6b7280;">Click on a table row to view more details.</p>';
 }
 
 function getSpecificTest(user, test, id, results_div) {
