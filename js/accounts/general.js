@@ -36,7 +36,7 @@ function logout() {
   auth
     .signOut()
     .then(() => {
-      window.location = "amctesseract.github.io";
+      window.location = "https://amctesseract.github.io";
     })
     .catch((error) => {
       console.log(error);

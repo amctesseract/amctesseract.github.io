@@ -66,7 +66,7 @@ function loginserver(email, password) {
           auth.signOut();
         } else {
           firebase.auth();
-          window.location = "amctesseract.github.io";
+          window.location = "https://amctesseract.github.io";
         }
       }
     })
