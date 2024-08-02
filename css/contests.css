@@ -1,0 +1,94 @@
+/* --- TEST SCREEN CSS --- */
+
+.shown {
+  display: block;
+}
+.hidden {
+  display: none !important;
+}
+
+/* questions */
+.MathJax > svg {
+  display: inline;
+}
+/* latexcenter is theoretically unnecessary because of mathjax */
+.latexcenter {
+  margin: auto;
+  display: block;
+  padding: 15px;
+}
+.problem-body {
+  margin-bottom: 50px;
+  width: calc(3 / 4 * (100% - 30px));
+  float: right;
+  display: block;
+}
+.problem-body > p {
+  margin: 0 0 15px 0;
+}
+
+.problem-number {
+  padding-right: 22px;
+  float: left;
+}
+.problem {
+  overflow: auto;
+  margin-bottom: 25px;
+  width: 100%;
+}
+
+/* bubbles */
+.bubbles {
+  width: calc(2 / 10 * calc(100% - 30px));
+  float: left;
+}
+.bubbles-inner {
+  margin-top: -5px;
+}
+.bubbles-inner > button {
+  float: left;
+  border: solid black;
+  border-radius: 10px;
+  padding: 5px 15px 5px 15px;
+  font-size: 15px;
+  margin: 5px;
+  transition-property: none !important;
+  color: black;
+}
+.bubbles-inner > button:hover {
+  transition-property: none !important;
+}
+.bubbles-inner > button:disabled {
+  color: gray;
+}
+
+.deselected {
+  background-color: white;
+}
+.deselected:hover {
+  background-color: #e3e3e3;
+}
+
+/* aime answer field */
+.answer-input {
+  width: 100px;
+  padding: 3px 5px;
+  box-sizing: border-box;
+  border-color: black;
+  border-radius: 0;
+  border-width: 1px;
+}
+
+.answer-input-wrapper {
+  position: relative;
+  width: calc(2 / 10 * calc(100% - 30px));
+  float: left;
+}
+
+/* --- FINISHED SCREEN --- */
+/* finished heading */
+#view-scores {
+  margin: auto;
+  display: block;
+  padding: 7px;
+}

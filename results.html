@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Past Results | Tesseract</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" href="assets/favicon.svg" />
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/flowbite@2.4.1/dist/flowbite.min.css"
+      rel="stylesheet"
+    />
+    <script
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"
+      id="MathJax-script"
+    ></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+      };
+    </script>
+
+    <style type="text/tailwindcss">
+      .selected {
+        @apply bg-blue-200;
+      }
+      .selected:hover {
+        @apply bg-gray-200;
+      }
+      .deselected:hover {
+        @apply bg-gray-100;
+      }
+      #timer {
+        @apply bg-white;
+        @apply border;
+        @apply border-gray-800;
+        @apply rounded-xl;
+        @apply p-5;
+        @apply sticky;
+        @apply shadow-md;
+        position: sticky;
+        top: 15px;
+        right: 15px;
+        float: right;
+        z-index: 100;
+        width: 240px;
+      }
+      #contest-heading-text,
+      #finished-heading-text,
+      #review-heading-text,
+      #page-header {
+        @apply text-xl;
+        @apply text-left;
+      }
+      #contest-description-text {
+        width: calc(100% - 250px);
+        float: left;
+      }
+      #finish-test {
+        @apply text-white border border-blue-600 bg-blue-600 font-medium rounded-lg text-sm px-5 py-2.5 text-center;
+        margin-top: -48px !important;
+        margin: auto;
+        display: block;
+      }
+      #view-scores {
+        @apply text-white border border-blue-600 bg-blue-600 font-medium rounded-lg text-sm px-5 py-2.5 text-center;
+        margin: auto;
+        display: block;
+        margin-top: 1.25rem !important;
+      }
+      #finish-test:focus,
+      #view-scores:focus {
+        @apply ring-4 outline-none ring-blue-400;
+      }
+      #finish-test:hover,
+      #view-scores:hover {
+        @apply bg-blue-700;
+      }
+      #finished-description {
+        @apply mt-2;
+      }
+      #review-score {
+        @apply w-full text-center bg-blue-100 rounded-lg p-2 mb-2;
+      }
+      #review-answers-report {
+        @apply mb-16;
+      }
+
+      table {
+        @apply w-full text-sm text-left text-gray-500 m-auto;
+      }
+      thead {
+        @apply text-xs text-gray-700 uppercase bg-gray-50;
+      }
+
+      th {
+        @apply px-2 py-3 text-center w-1/4;
+      }
+      table > tr {
+        @apply bg-white border-b;
+      }
+      td {
+        @apply px-2 py-4 text-center w-1/4;
+      }
+      table a:hover {
+        @apply text-blue-600;
+      }
+      #results-table th {
+        @apply text-left w-auto;
+      }
+      #results-table td {
+        @apply w-auto;
+      }
+      #results-table td:nth-child(odd) {
+        @apply bg-gray-50;
+      }
+
+      #sign-in-button,
+      #register-button,
+      #signout-button,
+      .nav-button {
+        @apply rounded-lg py-2 px-4 text-blue-600 border border-blue-600 bg-white font-medium text-sm text-center;
+      }
+      #sign-in-button:focus,
+      #register-button:focus,
+      #signout-button:focus,
+      .nav-button:focus {
+        @apply ring-4 outline-none ring-blue-400;
+      }
+      #sign-in-button:hover,
+      #register-button:hover,
+      #signout-button:hover,
+      .nav-button:hover {
+        @apply bg-blue-100;
+      }
+      #username {
+        @apply inline float-right flex items-center;
+      }
+      .section-header {
+        @apply w-full text-center bg-blue-100 rounded-lg p-2 mb-2 mt-5;
+      }
+      #results-header {
+        @apply mt-0;
+      }
+
+      .shown {
+        display: block;
+      }
+      .hidden {
+        display: none !important;
+      }
+    </style>
+  </head>
+  <body class="mx-auto">
+    <div class="min-h-screen bg-blue-100">
+      <div
+        id="header"
+        class="max-w-screen-lg mx-auto px-8 bg-blue-100 text-right h-4"
+      ></div>
+      <div
+        class="max-w-screen-lg px-8 py-8 mx-auto bg-white min-h-screen shadow-xl"
+      >
+        <div id="body-header" class="mb-4 flex justify-between">
+          <h1 class="text-3xl inline">
+            <span>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="size-6 inline-block text-blue-600"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M6.429 9.75 2.25 12l4.179 2.25m0-4.5 5.571 3 5.571-3m-11.142 0L2.25 7.5 12 2.25l9.75 5.25-4.179 2.25m0 0L21.75 12l-4.179 2.25m0 0 4.179 2.25L12 21.75 2.25 16.5l4.179-2.25m11.142 0-5.571 3-5.571-3"
+                />
+              </svg>
+            </span>
+            <span class="align-middle inline-block">Tesseract</span>
+          </h1>
+          <div id="menu" class="inline flex items-center space-x-4">
+            <a href="/" class="nav-button">Home</a>
+            <a href="results" class="nav-button">Exam history</a>
+            <div id="auth" class="inline flex items-center space-x-4"></div>
+          </div>
+        </div>
+
+        <div id="main-screen">
+          <div id="page-header" class="mb-2">Past Practice Exams</div>
+          <div id="results">
+            <div id="info-text"></div>
+            <div id="review-description-text" class="mt-2 mb-3 hidden">
+              <p class="mb-2 text-gray-500 dark:text-gray-400">
+                Your score is displayed below, followed by a table depicting
+                your answers and the correct answers side-by-side for each
+                question. Skipped questions are marked with a dash in the table.
+                You can find the problems of the exam on the
+                <a
+                  href="https://artofproblemsolving.com/community/c3510133_maa_amc"
+                  target="_blank"
+                  class="text-blue-600 dark:text-blue-500 hover:underline"
+                  >AoPS Contest Collections</a
+                >.
+              </p>
+              <p
+                id="date-text"
+                class="mb-2 text-gray-500 dark:text-gray-400"
+              ></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Insert these scripts at the bottom of the HTML, but before you use any Firebase services -->
+
+    <!-- Firebase App (the core Firebase SDK) is always required and must be listed first -->
+    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-app.js"></script>
+
+    <!-- TODO: Add SDKs for Firebase products that you want to use
+         https://firebase.google.com/docs/web/setup#available-libraries -->
+    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-analytics.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-database.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/flowbite@2.4.1/dist/flowbite.min.js"></script>
+
+    <script src="js/accounts/general.js"></script>
+    <script src="js/results.js"></script>
+  </body>
+</html>

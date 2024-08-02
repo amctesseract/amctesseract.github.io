@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Tesseract</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" href="assets/favicon.svg" />
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/flowbite@2.4.1/dist/flowbite.min.css"
+      rel="stylesheet"
+    />
+    <script
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"
+      id="MathJax-script"
+    ></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+      };
+    </script>
+
+    <link href="css/contests.css" rel="stylesheet" />
+
+    <style type="text/tailwindcss">
+      .selected {
+        @apply bg-blue-200;
+      }
+      .selected:hover {
+        @apply bg-gray-200;
+      }
+      .deselected:hover {
+        @apply bg-gray-100;
+      }
+      #timer {
+        @apply bg-white;
+        @apply border;
+        @apply border-gray-800;
+        @apply rounded-xl;
+        @apply p-5;
+        @apply sticky;
+        @apply shadow-md;
+        position: sticky;
+        top: 15px;
+        right: 15px;
+        float: right;
+        z-index: 100;
+        width: 240px;
+      }
+      #contest-heading-text,
+      #finished-heading-text,
+      #review-heading-text {
+        @apply text-xl;
+        @apply text-left;
+      }
+      #contest-description-text {
+        width: calc(100% - 250px);
+        float: left;
+      }
+      #finish-test {
+        @apply text-white border border-blue-600 bg-blue-600 font-medium rounded-lg text-sm px-5 py-2.5 text-center;
+        margin-top: -48px !important;
+        margin: auto;
+        display: block;
+      }
+      #view-scores {
+        @apply text-white border border-blue-600 bg-blue-600 font-medium rounded-lg text-sm px-5 py-2.5 text-center;
+        margin: auto;
+        display: block;
+        margin-top: 1.25rem !important;
+      }
+      #finish-test:focus,
+      #view-scores:focus {
+        @apply ring-4 outline-none ring-blue-400;
+      }
+      #finish-test:hover,
+      #view-scores:hover {
+        @apply bg-blue-700;
+      }
+      #finished-description {
+        @apply mt-2;
+      }
+      #review-score {
+        @apply w-full text-center bg-blue-100 rounded-lg p-2 mb-2;
+      }
+      #review-answers-report {
+        @apply mb-16;
+      }
+
+      table {
+        @apply w-full text-sm text-left text-gray-500 m-auto;
+      }
+      thead {
+        @apply text-xs text-gray-700 uppercase bg-gray-50;
+      }
+      th {
+        @apply px-2 py-3;
+      }
+      table > tr {
+        @apply bg-white border-b;
+      }
+      td {
+        @apply px-2 py-4 text-center;
+      }
+      td:nth-child(odd) {
+        @apply bg-gray-50;
+      }
+      #sign-in-button,
+      #register-button,
+      #signout-button,
+      .nav-button {
+        @apply rounded-lg py-2 px-4 text-blue-600 border border-blue-600 bg-white font-medium text-sm text-center;
+      }
+      #sign-in-button:focus,
+      #register-button:focus,
+      #signout-button:focus,
+      .nav-button:focus {
+        @apply ring-4 outline-none ring-blue-400;
+      }
+      #sign-in-button:hover,
+      #register-button:hover,
+      #signout-button:hover,
+      .nav-button:hover {
+        @apply bg-blue-100;
+      }
+      #username {
+        @apply inline float-right flex items-center;
+      }
+    </style>
+  </head>
+  <body class="mx-auto">
+    <div class="min-h-screen bg-blue-100">
+      <div
+        id="header"
+        class="max-w-screen-lg mx-auto px-8 bg-blue-100 text-right h-4"
+      ></div>
+      <div
+        class="max-w-screen-lg px-8 py-8 mx-auto bg-white min-h-screen shadow-xl"
+      >
+        <div id="body-header" class="mb-4 flex justify-between">
+          <h1 class="text-3xl inline">
+            <span>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="size-6 inline-block text-blue-600"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M6.429 9.75 2.25 12l4.179 2.25m0-4.5 5.571 3 5.571-3m-11.142 0L2.25 7.5 12 2.25l9.75 5.25-4.179 2.25m0 0L21.75 12l-4.179 2.25m0 0 4.179 2.25L12 21.75 2.25 16.5l4.179-2.25m11.142 0-5.571 3-5.571-3"
+                />
+              </svg>
+            </span>
+            <span class="align-middle inline-block">Tesseract</span>
+          </h1>
+          <div id="menu" class="inline flex items-center space-x-4">
+            <a href="/" class="nav-button">Home</a>
+            <a href="results" class="nav-button">Exam history</a>
+            <div id="auth" class="inline flex items-center space-x-4"></div>
+          </div>
+        </div>
+
+        <div id="home-screen">
+          <form
+            class="flex flex-row gap-4 mb-2"
+            onsubmit="starttest();return false;"
+          >
+            <div class="mb-5 basis-1/5">
+              <label
+                for="email"
+                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                >Exam type</label
+              >
+              <select
+                id="test-names"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              >
+                <option>AMC 10A</option>
+                <option>AMC 10B</option>
+                <option>AMC 12A</option>
+                <option>AMC 12B</option>
+                <option>AIME I</option>
+                <option>AIME II</option>
+              </select>
+            </div>
+            <div class="mb-5 basis-1/5">
+              <label
+                for="year"
+                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                >Exam year</label
+              >
+              <input
+                type="number"
+                id="test-year"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                required
+              />
+            </div>
+            <div class="mb-5 basis-1/5">
+              <label
+                for="hours"
+                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                >Hours</label
+              >
+              <input
+                type="number"
+                id="test-length-hours"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                required
+              />
+            </div>
+            <div class="mb-5 basis-1/5">
+              <label
+                for="minutes"
+                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                >Minutes</label
+              >
+              <input
+                type="number"
+                id="test-length-minutes"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                required
+              />
+            </div>
+            <div class="mb-5 basis-1/5">
+              <label
+                for="submit"
+                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                >‍</label
+              >
+              <button
+                type="submit"
+                class="text-white border border-blue-600 bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-400 font-medium rounded-lg text-sm w-full px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+              >
+                Start exam
+              </button>
+            </div>
+          </form>
+
+          <div
+            id="accordion-color"
+            data-accordion="collapse"
+            data-active-classes="bg-blue-100 dark:bg-gray-800 text-blue-600 dark:text-white"
+          >
+            <h2 id="accordion-color-heading-1">
+              <button
+                type="button"
+                class="flex items-center justify-between w-full p-4 font-medium rtl:text-right text-gray-500 border border-b-0 border-gray-200 rounded-t-xl focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-800 dark:border-gray-700 dark:text-gray-400 hover:bg-blue-100 dark:hover:bg-gray-800 gap-3"
+                data-accordion-target="#accordion-color-body-1"
+                aria-expanded="false"
+                aria-controls="accordion-color-body-1"
+              >
+                <span>What is this?</span>
+                <svg
+                  data-accordion-icon
+                  class="w-3 h-3 rotate-180 shrink-0"
+                  aria-hidden="true"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 10 6"
+                >
+                  <path
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M9 5 5 1 1 5"
+                  />
+                </svg>
+              </button>
+            </h2>
+            <div
+              id="accordion-color-body-1"
+              class="hidden"
+              aria-labelledby="accordion-color-heading-1"
+            >
+              <div
+                class="p-5 border border-b-0 border-gray-200 dark:border-gray-700 dark:bg-gray-900"
+              >
+                <p class="mb-2 text-gray-500 dark:text-gray-400">
+                  Due to COVID-19, the American Mathematics Competitions series
+                  hosted by the Mathematical Association of America was moved
+                  online, to the Art of Problem Solving website. This is an
+                  online platform intended to simulate the real online contest
+                  environment that was used for the actual test as closely as
+                  possible.
+                </p>
+              </div>
+            </div>
+            <h2 id="accordion-color-heading-2">
+              <button
+                type="button"
+                class="flex items-center justify-between w-full p-4 font-medium rtl:text-right text-gray-500 border border-b-0 border-gray-200 focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-800 dark:border-gray-700 dark:text-gray-400 hover:bg-blue-100 dark:hover:bg-gray-800 gap-3"
+                data-accordion-target="#accordion-color-body-2"
+                aria-expanded="false"
+                aria-controls="accordion-color-body-2"
+              >
+                <span>How do I use Tesseract?</span>
+                <svg
+                  data-accordion-icon
+                  class="w-3 h-3 rotate-180 shrink-0"
+                  aria-hidden="true"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 10 6"
+                >
+                  <path
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M9 5 5 1 1 5"
+                  />
+                </svg>
+              </button>
+            </h2>
+            <div
+              id="accordion-color-body-2"
+              class="hidden"
+              aria-labelledby="accordion-color-heading-2"
+            >
+              <div
+                class="p-5 border border-b-0 border-gray-200 dark:border-gray-700"
+              >
+                <p class="mb-2 text-gray-500 dark:text-gray-400">
+                  Begin by selecting the exam you want to practice using the
+                  menu above. After clicking the "Start exam" button, you will
+                  be taken to the exam and your timer will begin counting down.
+                  For multiple choice exams, select your answer by clicking on
+                  the respective button on the left side of the screen, and for
+                  short answer questions, enter your answer in corresponding the
+                  text box. If you wish to change or unselect your answer,
+                  either click on another option or click on the same option you
+                  originally chose, respectively. If you wish to leave a
+                  question blank, simply do not select an answer choice for that
+                  problem.
+                </p>
+                <p class="mb-2 text-gray-500 dark:text-gray-400">
+                  Once you have completed the exam, click the "Submit Test"
+                  button to end the test, or let the timer run out. The test
+                  will be automatically graded and you will be able to review
+                  your answers along with the questions and correct answers.
+                </p>
+                <p class="mb-2 text-gray-500 dark:text-gray-400">
+                  If you are signed in while taking the exam, your results will
+                  be saved. You can see a history of all your past exam results
+                  by clicking on the "Past exams" page. To see a detailed
+                  breakdown of an individual exam, click on the respective row
+                  in the table.
+                </p>
+              </div>
+            </div>
+            <h2 id="accordion-color-heading-3">
+              <button
+                type="button"
+                class="flex items-center justify-between w-full p-4 font-medium rtl:text-right text-gray-500 border border-gray-200 focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-800 dark:border-gray-700 dark:text-gray-400 hover:bg-blue-100 dark:hover:bg-gray-800 gap-3"
+                data-accordion-target="#accordion-color-body-3"
+                aria-expanded="false"
+                aria-controls="accordion-color-body-3"
+              >
+                <span>Where are the problems from?</span>
+                <svg
+                  data-accordion-icon
+                  class="w-3 h-3 rotate-180 shrink-0"
+                  aria-hidden="true"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 10 6"
+                >
+                  <path
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M9 5 5 1 1 5"
+                  />
+                </svg>
+              </button>
+            </h2>
+            <div
+              id="accordion-color-body-3"
+              class="hidden"
+              aria-labelledby="accordion-color-heading-3"
+            >
+              <div
+                class="p-5 border border-t-0 border-gray-200 dark:border-gray-700"
+              >
+                <p class="mb-2 text-gray-500 dark:text-gray-400">
+                  All problems are sourced from the
+                  <a
+                    href="https://maa.org/student-programs/amc/"
+                    class="text-blue-600 dark:text-blue-500 hover:underline"
+                    target="_blank"
+                    >MAA AMC</a
+                  >
+                  series.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="loading-screen" class="hidden">
+          <div id="loading-text">Retrieving questions... please wait.</div>
+        </div>
+
+        <div id="review-screen" class="hidden">
+          <div id="review-heading-text"></div>
+          <div id="review-description-text" class="mt-2 mb-3">
+            <p class="mb-2 text-gray-500 dark:text-gray-400">
+              Your score is displayed below, followed by a table depicting your
+              answers and the correct answers side-by-side for each question.
+              Skipped questions are marked with a dash in the table. At the
+              bottom of the page, you can find the problems of the exam, with
+              your selected answer on the left side highlighted in green if it
+              was correct and red if it was incorrect.
+            </p>
+          </div>
+          <div id="review-score"></div>
+          <!--<button id="show-score-table" onclick="toggletablevisibility()">
+            Show Score Report
+          </button>-->
+          <div id="review-answers-report"></div>
+        </div>
+
+        <div id="test-screen" class="hidden">
+          <div id="contest-heading-text"></div>
+          <div id="contest-description-text" class="mt-2 mb-8">
+            <p class="mb-2 text-gray-500 dark:text-gray-400">
+              You have started the test and your timer is counting down.
+            </p>
+
+            <p class="mb-2 text-gray-500 dark:text-gray-400">
+              If you are taking the AMC, click on the bubble corresponding to
+              your answer choice to select it. Click on that same bubble to
+              unselect it (counting as a skipped answer), or click on a
+              different bubble to change your answer. If you are taking an AIME,
+              type your answer into the text box. Leading zeroes are not
+              required. Once you have finished, click the "Submit" button at the
+              bottom of your screen, or let the timer run out.
+            </p>
+            <p class="mb-2 text-gray-500 dark:text-gray-400">Good luck!</p>
+          </div>
+          <div id="timer">
+            <div id="clock"></div>
+            <!--<div
+              id="settings"
+              onmouseover="rotate(this)"
+              onmouseout="unrotate(this)"
+              onclick="togglesettings()"
+            ></div>-->
+          </div>
+          <div id="questions"></div>
+        </div>
+
+        <div id="finished-screen" class="hidden">
+          <div id="finished-heading-text"></div>
+          <div id="finished-score"></div>
+          <div id="finished-description">
+            <p class="mb-2 text-gray-500 dark:text-gray-400">
+              Congratulations on completing the practice exam! The following
+              paragraphs are a quick description of the AMC scoring procedures
+              and steps. To view your score and a detailed breakdown of your
+              exam, click on the "View Results" button below.
+            </p>
+
+            <ul>
+              <li>
+                <p class="mb-2 text-gray-500 dark:text-gray-400">
+                  Scoring: In the AMC, correct answers are awarded 6 points,
+                  skipped answers are awarded 1.5 points, and incorrect answers
+                  are awarded 0 points. In the AIME, correct answers are awarded
+                  1 point, and skipped or incorrect answers are awarded 0
+                  points.
+                </p>
+              </li>
+              <li>
+                <p class="mb-2 text-gray-500 dark:text-gray-400">
+                  Qualification process: The MAA AMC is the process for
+                  selecting the six students to represent the USA at the
+                  International Mathematical Olympiad. After participating in
+                  the AMC 10/12, you may qualify for the AIME, and qualification
+                  for the USA(J)MO is based on combined performance between
+                  those two exams. Top scorers on the USA(J)MO are invited to a
+                  summer program, where, along with more exams, the IMO team is
+                  chosen.
+                </p>
+              </li>
+              <li>
+                <p class="mb-2 text-gray-500 dark:text-gray-400">
+                  Historical results: Past results (including cutoffs for old
+                  exams) can be found on the AoPS Wiki, found at
+                  <a
+                    href="https://artofproblemsolving.com/wiki/index.php/AMC_historical_results"
+                    target="_blank"
+                    class="text-blue-600 dark:text-blue-500 hover:underline"
+                    >this link</a
+                  >.
+                </p>
+              </li>
+            </ul>
+          </div>
+          <button id="view-scores">View results</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Insert these scripts at the bottom of the HTML, but before you use any Firebase services -->
+
+    <!-- Firebase App (the core Firebase SDK) is always required and must be listed first -->
+    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-app.js"></script>
+
+    <!-- TODO: Add SDKs for Firebase products that you want to use
+         https://firebase.google.com/docs/web/setup#available-libraries -->
+    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-analytics.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-database.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/flowbite@2.4.1/dist/flowbite.min.js"></script>
+
+    <script src="js/accounts/general.js"></script>
+    <script src="js/contests.js"></script>
+  </body>
+</html>
