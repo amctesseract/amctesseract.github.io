@@ -131,9 +131,53 @@
       #username {
         @apply inline float-right flex items-center;
       }
+
+      #mobile-notice {
+        display: none;
+      }
+      @media screen and (max-width: 768px) {
+        body * {
+          display: none;
+        }
+        #mobile-notice,
+        #mobile-notice * {
+          display: block;
+        }
+      }
     </style>
   </head>
   <body class="mx-auto">
+    <div id="mobile-notice">
+      <div
+        id="header"
+        class="max-w-screen-lg mx-auto px-8 bg-blue-100 text-right h-4"
+      ></div>
+      <div id="body-header" class="mb-4 flex justify-between px-8 py-8">
+        <h1 class="text-3xl !inline w-full">
+          <span class="!inline-block align-middle">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="size-6 inline-block text-blue-600"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M6.429 9.75 2.25 12l4.179 2.25m0-4.5 5.571 3 5.571-3m-11.142 0L2.25 7.5 12 2.25l9.75 5.25-4.179 2.25m0 0L21.75 12l-4.179 2.25m0 0 4.179 2.25L12 21.75 2.25 16.5l4.179-2.25m11.142 0-5.571 3-5.571-3"
+              />
+            </svg>
+          </span>
+          <span class="align-middle !inline-block">Tesseract</span>
+        </h1>
+        <div class="text-left mt-4">
+          Tesseract is not optimized for smaller screens. To use Tesseract,
+          please switch to a device with a larger screen.
+        </div>
+      </div>
+    </div>
     <div class="min-h-screen bg-blue-100">
       <div
         id="header"
