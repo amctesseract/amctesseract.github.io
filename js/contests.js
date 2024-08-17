@@ -32,6 +32,9 @@ function toggledisplay(element) {
 }
 
 function starttest() {
+  let author = document.getElementById("author");
+  toggledisplay(author);
+
   let homescreen = document.getElementById("home-screen");
   toggledisplay(homescreen);
 
